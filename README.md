@@ -46,9 +46,8 @@ To mirror operational forecasting reality and prevent temporal autocorrelation l
 * **Testing Set (2023–2025)**: 1,392 soundings held out for final unbiased evaluation.
 
 <p align="center">
-  <img src="catboost/results/images/Class_Distribution.png" height="260" alt="Class Distribution" />
-  &nbsp;&nbsp;
-  <img src="catboost/results/images/Missing_Value_Percentage.png" height="260" alt="Missing Values" />
+  <img src="catboost/results/images/Class_Distribution.png" width="48%" alt="Class Distribution" />
+  <img src="catboost/results/images/Missing_Value_Percentage.png" width="48%" alt="Missing Values" />
 </p>
 
 ---
@@ -111,14 +110,12 @@ Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 ### 🎯 Model Confusion Matrices
 
 <p align="center">
-  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" height="280" alt="CatBoost Confusion Matrix" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="other_models/lightgbm/notebooks/images/Confusion_Matrix.png" height="280" alt="LightGBM Confusion Matrix" />
+  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" width="48%" alt="CatBoost Confusion Matrix" />
+  <img src="other_models/lightgbm/notebooks/images/Confusion_Matrix.png" width="48%" alt="LightGBM Confusion Matrix" />
 </p>
 <p align="center">
-  <img src="other_models/xgboost/notebooks/images/Confusion_Matrix.png" height="280" alt="XGBoost Confusion Matrix" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="other_models/ensemble/notebooks/images/Confusion_Matrix.png" height="280" alt="Ensemble Confusion Matrix" />
+  <img src="other_models/xgboost/notebooks/images/Confusion_Matrix.png" width="48%" alt="XGBoost Confusion Matrix" />
+  <img src="other_models/ensemble/notebooks/images/Confusion_Matrix.png" width="48%" alt="Ensemble Confusion Matrix" />
 </p>
 
 ### 💡 Why CatBoost Was Selected as the Final Model
