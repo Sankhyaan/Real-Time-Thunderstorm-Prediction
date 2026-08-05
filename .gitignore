@@ -14,3 +14,5 @@ __pycache__/
 # OS generated
 Thumbs.db
 Desktop.ini
+
+report_extracted_images/

@@ -46,8 +46,8 @@ To mirror operational forecasting reality and prevent temporal autocorrelation l
 * **Testing Set (2023–2025)**: 1,392 soundings held out for final unbiased evaluation.
 
 <p align="center">
-  <img src="catboost/results/images/Class_Distribution.png" width="45%" alt="Class Distribution" />
-  <img src="catboost/results/images/Missing_Value_Percentage.png" width="45%" alt="Missing Values" />
+  <img src="catboost/results/images/Class_Distribution.png" height="260" alt="Class Distribution" />
+  <img src="catboost/results/images/Missing_Value_Percentage.png" height="260" alt="Missing Values" />
 </p>
 
 ---
@@ -88,30 +88,11 @@ The model utilizes **28 upper-air predictors** calculated using the `MetPy` atmo
 
 ---
 
-## 📈 Model Performance & Visualizations
+## 📊 Models Comparison
 
 Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 
-### 🎯 CatBoost Performance & Confusion Matrix
-
-<p align="center">
-  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" width="45%" alt="Confusion Matrix" />
-  <img src="catboost/notebooks/images/Feature_Importance.png" width="45%" alt="Feature Importance" />
-</p>
-
-* **True Negatives (TN)**: 981
-* **False Positives (FP)**: 238
-* **False Negatives (FN)**: 60 (Missed storms)
-* **True Positives (TP)**: 113 (Detected storms)
-
-### 📊 Performance Curves (ROC & Precision-Recall)
-
-<p align="center">
-  <img src="catboost/notebooks/images/ROC_Curve.png" width="45%" alt="ROC Curve" />
-  <img src="catboost/notebooks/images/Precision_Recall_Curve.png" width="45%" alt="Precision Recall Curve" />
-</p>
-
-### ⚔️ Algorithm & Ensemble Performance Comparison
+### ⚔️ Performance Comparison Graph
 
 <p align="center">
   <img src="other_models/ensemble/results/images/Model_Comparison.png" width="75%" alt="Model Comparison" />
@@ -126,7 +107,23 @@ Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 | Weighted Ensemble (0.1 CB, 0.35 LGB, 0.55 XGB) | 0.807 | 0.503 | 0.330 | 0.249 | 0.398 |
 | Stacking Ensemble (Logistic Regression Meta) | 0.805 | 0.555 | 0.328 | 0.258 | 0.412 |
 
-> **Why CatBoost was selected**: CatBoost achieved the highest operational hazard detection recall (65.3%) and Critical Success Index (0.275) among all individual models and ensembles. In severe weather forecasting, missed events carry significantly higher cost than false alarms.
+### 🎯 Model Confusion Matrices
+
+<p align="center">
+  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" height="250" alt="CatBoost Confusion Matrix" />
+  <img src="other_models/lightgbm/notebooks/images/Confusion_Matrix.png" height="250" alt="LightGBM Confusion Matrix" />
+</p>
+<p align="center">
+  <img src="other_models/xgboost/notebooks/images/Confusion_Matrix.png" height="250" alt="XGBoost Confusion Matrix" />
+  <img src="other_models/ensemble/notebooks/images/Confusion_Matrix.png" height="250" alt="Ensemble Confusion Matrix" />
+</p>
+
+### 💡 Why CatBoost Was Selected as the Final Model
+
+* **Highest Hazard Recall & CSI**: CatBoost achieved the highest operational recall (0.653) and Critical Success Index (0.275) among all models, prioritizing severe weather hazard detection where missed storms carry a higher operational cost than false alarms.
+* **Ordered Boosting & Oblivious Trees**: Ordered boosting prevents target leakage during training, while symmetric oblivious trees impose structural regularization that resists overfitting on correlated upper-air indices.
+* **Native Missing-Value Handling**: Preserves physical atmospheric signals in incomplete radiosonde soundings without introducing artificial imputation bias.
+* **No Loss in Ranking Skill**: CatBoost's ROC AUC (0.799) is statistically on par with LightGBM (0.805), XGBoost (0.807), and Ensembles (0.807), meaning higher operational recall was achieved without sacrificing overall model discriminative ability.
 
 ---
 
