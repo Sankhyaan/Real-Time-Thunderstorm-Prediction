@@ -131,15 +131,9 @@ Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 
 Raw model probabilities are mapped into 7 operational risk tiers based on atmospheric instability thresholds:
 
-| Operational Probability | Risk Category | Key Index Threshold Highlights |
-| :---: | :--- | :--- |
-| **95%** | **Very High** | PW >= 60.5 mm, KI >= 35.6, CAPE_V >= 2325 J/kg, SWEAT >= 223.4 |
-| **85%** | **High** | PW >= 55.4 mm, KI >= 34.1, CAPE_V >= 2196 J/kg, SWEAT >= 216.2 |
-| **75%** | **Moderately High**| PW >= 50.6 mm, KI >= 32.9, CAPE_V >= 1799 J/kg, SWEAT >= 215.8 |
-| **65%** | **Moderate** | PW >= 41.6 mm, KI >= 26.8, CAPE_V >= 1541 J/kg, SWEAT >= 157.5 |
-| **55%** | **Moderately Low** | PW >= 29.4 mm, KI >= 16.4, CAPE_V >= 977 J/kg, SWEAT >= 83.4 |
-| **45%** | **Low** | PW >= 22.5 mm, KI >= -10.6, CAPE_V >= 56 J/kg, SWEAT >= 59.4 |
-| **<35%**| **Very Low** | PW < 22.5 mm, KI < -10.6, CAPE_V < 56 J/kg |
+<p align="center">
+  <img src="catboost/results/images/Operational_Probability_Thresholds.png" width="85%" alt="Operational Probability Thresholds Table" />
+</p>
 
 ---
 
