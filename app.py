@@ -181,29 +181,21 @@ div[role="radiogroup"] p{color:#1F2937 !important;}
     box-shadow:0 0 0 2px rgba(124,58,237,.15) !important;
 }
 
-/* Selectbox - force lavender via testid */
-[data-testid="stSelectbox"] > div > div,
-[data-testid="stSelectbox"] > div > div > div {
+/* Selectbox - clean single border lavender styling */
+[data-baseweb="select"] > div {
     background-color:#EDE9FE !important;
     border:1px solid #C4B5FD !important;
     border-radius:8px !important;
 }
-/* Force ALL text inside selectbox to lavender purple */
-[data-testid="stSelectbox"] * {
+[data-baseweb="select"] * {
     color:#4C1D95 !important;
-    background-color:transparent !important;
 }
-[data-testid="stSelectbox"] > div > div,
-[data-testid="stSelectbox"] > div > div > div,
-[data-testid="stSelectbox"] > div > div > div > div {
-    background-color:#EDE9FE !important;
+[data-baseweb="select"] svg {
+    fill:#7C3AED !important;
 }
-[data-testid="stSelectbox"] svg { fill:#7C3AED !important; }
-/* Hide blinking text cursor inside selectbox */
-[data-testid="stSelectbox"] input,
 [data-baseweb="select"] input {
     caret-color: transparent !important;
-    cursor: default !important;
+    cursor: pointer !important;
 }
 
 /* Selectbox dropdown list */
