@@ -110,12 +110,12 @@ Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 ### 🎯 Model Confusion Matrices
 
 <p align="center">
-  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" height="250" alt="CatBoost Confusion Matrix" />
-  <img src="other_models/lightgbm/notebooks/images/Confusion_Matrix.png" height="250" alt="LightGBM Confusion Matrix" />
+  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" width="45%" alt="CatBoost Confusion Matrix" />
+  <img src="other_models/lightgbm/notebooks/images/Confusion_Matrix.png" width="45%" alt="LightGBM Confusion Matrix" />
 </p>
 <p align="center">
-  <img src="other_models/xgboost/notebooks/images/Confusion_Matrix.png" height="250" alt="XGBoost Confusion Matrix" />
-  <img src="other_models/ensemble/notebooks/images/Confusion_Matrix.png" height="250" alt="Ensemble Confusion Matrix" />
+  <img src="other_models/xgboost/notebooks/images/Confusion_Matrix.png" width="45%" alt="XGBoost Confusion Matrix" />
+  <img src="other_models/ensemble/notebooks/images/Confusion_Matrix.png" width="45%" alt="Ensemble Confusion Matrix" />
 </p>
 
 ### 💡 Why CatBoost Was Selected as the Final Model
