@@ -1,4 +1,4 @@
-# ⚡ Real-Time Thunderstorm Prediction System
+﻿# ⚡ Real-Time Thunderstorm Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B.svg)](https://streamlit.io/)
@@ -10,11 +10,11 @@
 
 ---
 
-## 📌 Repository About / Overview
+## 📌 Repository Overview
 
-The **Real-Time Thunderstorm Prediction System** is an end-to-end operational machine learning framework designed to classify and predict 24-hour thunderstorm occurrence for **Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E)**. 
+The **Real-Time Thunderstorm Prediction System** is an operational machine learning framework designed to classify and predict 24-hour thunderstorm occurrence for **Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E)**. 
 
-By combining 25 annual cycles of radiosonde upper-air profiles (2000–2025) with ground-truth SYNOP present-weather reports, the system computes **28 atmospheric stability, moisture, and kinematic indices** via MetPy and predicts next-day severe weather risk using an Optuna-optimized **CatBoost Classifier**. The deployed Streamlit dashboard fetches live upper-air soundings via Siphon from the University of Wyoming database and maps raw probabilities into **7 calibrated operational risk tiers (35% to 95%)**.
+By combining **25 annual cycles of radiosonde upper-air profiles (2000–2025)** with ground-truth SYNOP present-weather reports, the system computes **28 atmospheric stability, moisture, and kinematic indices** via MetPy and predicts next-day severe weather risk using an Optuna-optimized **CatBoost Classifier**. The deployed Streamlit dashboard fetches live upper-air soundings via Siphon from the University of Wyoming database and maps raw probabilities into **7 calibrated operational risk tiers (35% to 95%)**.
 
 ---
 
@@ -23,9 +23,9 @@ By combining 25 annual cycles of radiosonde upper-air profiles (2000–2025) wit
 * **⚡ Real-Time Sounding Ingestion**: Automated live upper-air radiosonde retrieval for Station 43150 (00:00 & 12:00 UTC) via Siphon from the University of Wyoming database, with fallback to historical observations.
 * **🔬 MetPy Diagnostic Engine**: Dynamic calculation of 28 atmospheric stability, thermodynamic, and kinematic indices (CAPE, PW, K-Index, Lifted Index, SWEAT, BRN, etc.).
 * **🤖 Optimized Gradient-Boosted Classifier**: Deployed CatBoost model with ordered boosting and oblivious trees, natively handling missing sounding levels without imputation bias.
-* **🎯 Recall-Constrained Threshold Calibration**: Custom decision threshold (.32$) optimized against the Critical Success Index (CSI) to prioritize early hazard warning over false alarm reduction.
+* **🎯 Recall-Constrained Threshold Calibration**: Decision threshold (0.32) optimized against the Critical Success Index (CSI) to prioritize early hazard warning over false alarm reduction.
 * **📊 Operational Risk Scale**: Calibrated probability mapping converting raw model outputs into 7 actionable risk levels (*Very Low* to *Very High*).
-* **🎨 Modern Executive Dashboard**: Streamlit interface displaying station information, thermodynamic index cards, model predictions, risk progress bars, interactive Plotly feature importances, and downloadable raw sounding data.
+* **🎨 Executive Dashboard**: Interactive Streamlit interface displaying station metadata, thermodynamic index cards, model predictions, risk progress bars, Plotly feature importances, and downloadable raw sounding data.
 
 ---
 
@@ -33,17 +33,22 @@ By combining 25 annual cycles of radiosonde upper-air profiles (2000–2025) wit
 
 | Parameter | Description |
 | :--- | :--- |
-| **Observation Station** | Station 43150 (Visakhapatnam, India; .70^\circ\text{ N}, 83.30^\circ\text{ E}$) |
-| **Time Period** | 25 Years ( - 2025$), total 11,591 atmospheric soundings |
+| **Observation Station** | Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E) |
+| **Time Period** | 25 Years (2000 – 2025), total 11,591 atmospheric soundings |
 | **Data Sources** | 1. University of Wyoming Upper-Air Radiosonde Archive<br>2. SYNOP Present/Past Weather Reports (7wwW1W2 codes) |
-| **Target Variable (Thunderstorm_24h)** | Binary indicator ($ = Thunderstorm observed within 24h, $ = Non-thunderstorm). Triggered by present weather ( \in [13, 17, 29, 91-99]$) or past weather (, W2 = 9$). |
-| **Class Distribution** | Imbalanced: .78\%$ non-thunderstorm vs. .22\%$ thunderstorm soundings |
+| **Target Variable (Thunderstorm_24h)** | Binary indicator (1 = Thunderstorm observed within 24h, 0 = Non-thunderstorm). Triggered by present weather (ww in 13, 17, 29, 91-99) or past weather (W1/W2 = 9). |
+| **Class Distribution** | Imbalanced: 79.78% non-thunderstorm vs. 20.22% thunderstorm soundings |
 
-### 📅 Chronological Dataset Splitting (No Temporal Leakage)
+### 📅 Chronological Dataset Splitting
 To mirror operational forecasting reality and prevent temporal autocorrelation leakage:
 * **Training Set (2000–2020)**: 9,619 soundings used for model parameter fitting.
 * **Validation Set (2021–2022)**: 580 soundings reserved for hyperparameter tuning & threshold selection.
 * **Testing Set (2023–2025)**: 1,392 soundings held out for final unbiased evaluation.
+
+<p align="center">
+  <img src="catboost/results/images/Class_Distribution.png" width="45%" alt="Class Distribution" />
+  <img src="catboost/results/images/Missing_Value_Percentage.png" width="45%" alt="Missing Values" />
+</p>
 
 ---
 
@@ -65,6 +70,10 @@ The model utilizes **28 upper-air predictors** calculated using the MetPy atmosp
 | **THETAE_LCL** | Equivalent Potential Temp at LCL | Conserved moist thermodynamic potential temperature. |
 | **THK_1000_500**| 1000–500 hPa Thickness | Geopotential thickness proportional to mean-layer virtual temperature. |
 
+<p align="center">
+  <img src="catboost/notebooks/images/Correlation_Heatmap.png" width="75%" alt="Correlation Heatmap" />
+</p>
+
 ---
 
 ## ⚙️ Machine Learning Pipeline & Methodology
@@ -82,40 +91,41 @@ The model utilizes **28 upper-air predictors** calculated using the MetPy atmosp
                                                 └─────────────────┘
 `
 
-1. **Missing Value Handling**: Incomplete soundings (e.g., terminating before EL) were preserved natively by CatBoost rather than imputed, as missingness itself carries physical signal (storm-top height / ascent ceiling).
+1. **Missing Value Handling**: Incomplete soundings (e.g., terminating before EL) were preserved natively by CatBoost rather than imputed, as missingness carries physical atmospheric signal.
 2. **Multicollinearity**: All 28 features retained; tree ensembles natively manage correlated feature clusters (e.g., CAPE, KI, SWEAT).
-3. **Hyperparameter Tuning**: Optuna (Tree-structured Parzen Estimator) search optimizing validation F1/AUC with uto_class_weights='Balanced'.
-4. **Threshold Selection**: Swept decision thresholds (.20 - 0.80$) on validation data to maximize Critical Success Index (CSI) subject to a minimum recall constraint of .70$, selecting **.32$** as the operating threshold.
+3. **Hyperparameter Tuning**: Optuna (Tree-structured Parzen Estimator) search optimizing validation F1/AUC with class weights set to Balanced.
+4. **Threshold Selection**: Swept decision thresholds (0.20 - 0.80) on validation data to maximize Critical Success Index (CSI) subject to a minimum recall constraint of 0.70, selecting **0.32** as the operating threshold.
 
 ---
 
-## 📈 Model Performance & Comparative Evaluation
+## 📈 Model Performance & Visualizations
 
 Evaluated on the held-out **2023–2025 test set** (1,392 unseen soundings):
 
-### 🏆 Final Model Evaluation (CatBoost @ 0.32 Threshold)
+### 🎯 CatBoost Performance & Confusion Matrix
 
-`
-Test Classification Report (Held-out 2023-2025):
-=================================================
-               precision    recall  f1-score   support
-No Thunderstorm     0.94      0.80      0.87      1219
-   Thunderstorm     0.32      0.65      0.43       173
+<p align="center">
+  <img src="catboost/notebooks/images/Final_Confusion_Matrix.png" width="45%" alt="Confusion Matrix" />
+  <img src="catboost/notebooks/images/Feature_Importance.png" width="45%" alt="Feature Importance" />
+</p>
 
-       Accuracy : 0.790
-       ROC AUC  : 0.799
-       Recall   : 0.653  (113 / 173 thunderstorms detected)
-       CSI      : 0.275
-       FAR      : 0.678
-`
-
-### 🎯 Confusion Matrix (Test Set: 2023–2025)
 * **True Negatives (TN)**: 981
 * **False Positives (FP)**: 238
-* **False Negatives (FN)**: 60
-* **True Positives (TP)**: 113
+* **False Negatives (FN)**: 60 (Missed storms)
+* **True Positives (TP)**: 113 (Detected storms)
 
-### ⚔️ Comparative Models Summary
+### 📊 Performance Curves (ROC & Precision-Recall)
+
+<p align="center">
+  <img src="catboost/notebooks/images/ROC_Curve.png" width="45%" alt="ROC Curve" />
+  <img src="catboost/notebooks/images/Precision_Recall_Curve.png" width="45%" alt="Precision Recall Curve" />
+</p>
+
+### ⚔️ Algorithm & Ensemble Performance Comparison
+
+<p align="center">
+  <img src="other_models/ensemble/results/images/Model_Comparison.png" width="75%" alt="Model Comparison" />
+</p>
 
 | Model / Ensemble Strategy | ROC AUC | Recall (POD) | Precision | CSI (Threat Score) | F1-Score |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -126,7 +136,7 @@ No Thunderstorm     0.94      0.80      0.87      1219
 | Weighted Ensemble (0.1 CB, 0.35 LGB, 0.55 XGB) | 0.807 | 0.503 | 0.330 | 0.249 | 0.398 |
 | Stacking Ensemble (Logistic Regression Meta) | 0.805 | 0.555 | 0.328 | 0.258 | 0.412 |
 
-> **Why CatBoost was selected**: CatBoost achieved the highest operational hazard detection recall (.3\%$) and Critical Success Index (.275$) among all individual models and ensembles. In severe weather forecasting, missed events (false negatives) carry significantly higher risk than false alarms.
+> **Why CatBoost was selected**: CatBoost achieved the highest operational hazard detection recall (65.3%) and Critical Success Index (0.275) among all individual models and ensembles. In severe weather forecasting, missed events carry significantly higher cost than false alarms.
 
 ---
 
@@ -136,43 +146,43 @@ Raw model probabilities are mapped into 7 operational risk tiers based on atmosp
 
 | Operational Probability | Risk Category | Key Index Threshold Highlights |
 | :---: | :--- | :--- |
-| **95%** | **Very High** | $\text{PW} \ge 60.5\text{ mm}$, $\text{KI} \ge 35.6$, $\text{CAPE\_V} \ge 2325\text{ J/kg}$, $\text{SWEAT} \ge 223.4$ |
-| **85%** | **High** | $\text{PW} \ge 55.4\text{ mm}$, $\text{KI} \ge 34.1$, $\text{CAPE\_V} \ge 2196\text{ J/kg}$, $\text{SWEAT} \ge 216.2$ |
-| **75%** | **Moderately High**| $\text{PW} \ge 50.6\text{ mm}$, $\text{KI} \ge 32.9$, $\text{CAPE\_V} \ge 1799\text{ J/kg}$, $\text{SWEAT} \ge 215.8$ |
-| **65%** | **Moderate** | $\text{PW} \ge 41.6\text{ mm}$, $\text{KI} \ge 26.8$, $\text{CAPE\_V} \ge 1541\text{ J/kg}$, $\text{SWEAT} \ge 157.5$ |
-| **55%** | **Moderately Low** | $\text{PW} \ge 29.4\text{ mm}$, $\text{KI} \ge 16.4$, $\text{CAPE\_V} \ge 977\text{ J/kg}$, $\text{SWEAT} \ge 83.4$ |
-| **45%** | **Low** | $\text{PW} \ge 22.5\text{ mm}$, $\text{KI} \ge -10.6$, $\text{CAPE\_V} \ge 56\text{ J/kg}$, $\text{SWEAT} \ge 59.4$ |
-| **<35%**| **Very Low** | $\text{PW} < 22.5\text{ mm}$, $\text{KI} < -10.6$, $\text{CAPE\_V} < 56\text{ J/kg}$ |
+| **95%** | **Very High** | PW >= 60.5 mm, KI >= 35.6, CAPE_V >= 2325 J/kg, SWEAT >= 223.4 |
+| **85%** | **High** | PW >= 55.4 mm, KI >= 34.1, CAPE_V >= 2196 J/kg, SWEAT >= 216.2 |
+| **75%** | **Moderately High**| PW >= 50.6 mm, KI >= 32.9, CAPE_V >= 1799 J/kg, SWEAT >= 215.8 |
+| **65%** | **Moderate** | PW >= 41.6 mm, KI >= 26.8, CAPE_V >= 1541 J/kg, SWEAT >= 157.5 |
+| **55%** | **Moderately Low** | PW >= 29.4 mm, KI >= 16.4, CAPE_V >= 977 J/kg, SWEAT >= 83.4 |
+| **45%** | **Low** | PW >= 22.5 mm, KI >= -10.6, CAPE_V >= 56 J/kg, SWEAT >= 59.4 |
+| **<35%**| **Very Low** | PW < 22.5 mm, KI < -10.6, CAPE_V < 56 J/kg |
 
 ---
 
-## 📂 Project Directory Structure
+## 📁 Project Directory Structure
 
 `
 Real-Time-Thunderstorm-Prediction/
 ├── .streamlit/
-│   └── config.toml                           # Streamlit visual theme configuration
-├── final_outputs/                            # Production Model & Mapping Artifacts
-│   ├── CatBoost_Final.pkl                    # Trained CatBoost model binary
-│   ├── feature_order.pkl                     # Expected feature sequence
-│   ├── feature_importance.pkl                # Feature importance dictionary
+│   └── config.toml
+├── final_outputs/
+│   ├── CatBoost_Final.pkl
+│   ├── feature_order.pkl
+│   ├── feature_importance.pkl
 │   ├── CatBoost_Operational_Probability_Mapping.csv
 │   └── CatBoost_Operational_Thunderstorm_Thresholds.csv
-├── catboost/                                 # Primary CatBoost Pipeline & Research
-│   ├── data/                                 # Chronological splits (train, validation, test)
-│   ├── models/                               # CatBoost research model backups
-│   ├── notebooks/                            # Sequential Jupyter notebooks (01 to 05)
-│   └── results/                              # Evaluation metrics, SHAP ranking & distribution plots
-├── other_models/                             # Benchmark Models & Experiments
-│   ├── lightgbm/                             # LightGBM data, model & training notebook
-│   ├── xgboost/                              # XGBoost data, model & training notebook
-│   └── ensemble/                             # Stacking & Voting ensemble research
-├── app.py                                    # Streamlit Real-Time Interactive Dashboard
-├── predict.py                                # Inference pipeline module
-├── fetch_latest.py                           # Wyoming Sounding fetcher via Siphon
-├── metpy_indices.py                          # Sounding index calculation engine
-├── requirements.txt                          # Python dependencies
-└── Thunderstorm_Report_Final.pdf             # Project Technical Report
+├── catboost/
+│   ├── data/
+│   ├── models/
+│   ├── notebooks/
+│   └── results/
+├── other_models/
+│   ├── lightgbm/
+│   ├── xgboost/
+│   └── ensemble/
+├── app.py
+├── fetch_latest.py
+├── metpy_indices.py
+├── predict.py
+├── requirements.txt
+└── Thunderstorm_Report_Final.pdf
 `
 
 ---
@@ -184,7 +194,7 @@ Ensure you have Python 3.9+ installed on your system.
 
 ### 2. Clone Repository
 `ash
-git clone https://github.com/YOUR_USERNAME/Real-Time-Thunderstorm-Prediction.git
+git clone https://github.com/Sankhyaan/Real-Time-Thunderstorm-Prediction.git
 cd Real-Time-Thunderstorm-Prediction
 `
 
