@@ -78,20 +78,13 @@ The model utilizes **28 upper-air predictors** calculated using the `MetPy` atmo
 
 ## ⚙️ Machine Learning Pipeline & Methodology
 
-```mermaid
-flowchart TD
-    A[1. Raw Radiosonde Soundings & SYNOP Reports] --> B[2. MetPy Diagnostic Index Computation]
-    B --> C[3. Chronological Train/Val/Test Partitioning]
-    C --> D[4. CatBoost / LightGBM / XGBoost Model Training]
-    D --> E[5. Optuna Bayesian Hyperparameter Tuning]
-    E --> F[6. Recall-Constrained Threshold Optimization @ 0.32]
-    F --> G[7. Operational Risk Mapping & Streamlit Deployment]
-```
-
-1. **Missing Value Handling**: Incomplete soundings (e.g., terminating before EL) were preserved natively by CatBoost rather than imputed, as missingness carries physical atmospheric signal.
-2. **Multicollinearity**: All 28 features retained; tree ensembles natively manage correlated feature clusters (e.g., CAPE, KI, SWEAT).
-3. **Hyperparameter Tuning**: Optuna (Tree-structured Parzen Estimator) search optimizing validation F1/AUC with class weights set to `Balanced`.
-4. **Threshold Selection**: Swept decision thresholds (0.20 - 0.80) on validation data to maximize Critical Success Index (CSI) subject to a minimum recall constraint of 0.70, selecting **0.32** as the operating threshold.
+1. **Data Acquisition & Labeling**: Paired 25 years of upper-air radiosonde soundings for Station 43150 with surface SYNOP weather reports to construct ground-truth thunderstorm labels.
+2. **Diagnostic Feature Engineering**: Computed 28 thermodynamic, stability, and kinematic indices per sounding using the `MetPy` library.
+3. **Chronological Splitting**: Partitioned data by year into Training (2000–2020), Validation (2021–2022), and Test (2023–2025) sets to prevent temporal data leakage.
+4. **Model Development**: Trained CatBoost, LightGBM, XGBoost, and multi-model voting/stacking ensembles.
+5. **Hyperparameter Optimization**: Tuned models using Optuna (Tree-structured Parzen Estimator) for optimal validation AUC and F1-score.
+6. **Threshold Calibration**: Swept decision thresholds to maximize Critical Success Index (CSI) with a minimum 0.70 recall floor, establishing 0.32 as the operational threshold.
+7. **Operational Deployment**: Built a Streamlit web application with automated live Wyoming sounding fetching and 7-tier risk category mapping.
 
 ---
 
@@ -158,28 +151,27 @@ Raw model probabilities are mapped into 7 operational risk tiers based on atmosp
 ```text
 Real-Time-Thunderstorm-Prediction/
 ├── .streamlit/
-│   └── config.toml                           # Streamlit theme configuration
-├── final_outputs/                            # Production Model & Mapping Artifacts
-│   ├── CatBoost_Final.pkl                    # Deployed CatBoost model binary
-│   ├── feature_order.pkl                     # Expected feature order
-│   ├── feature_importance.pkl                # Feature importance mapping
+├── final_outputs/                            # Production model artifacts & probability mappings
+│   ├── CatBoost_Final.pkl
+│   ├── feature_order.pkl
+│   ├── feature_importance.pkl
 │   ├── CatBoost_Operational_Probability_Mapping.csv
 │   └── CatBoost_Operational_Thunderstorm_Thresholds.csv
-├── catboost/                                 # Primary CatBoost Pipeline & Research
-│   ├── data/                                 # Train, validation, and test CSV splits
-│   ├── models/                               # Research model backups
-│   ├── notebooks/                            # Sequential Jupyter notebooks (01 to 05)
-│   └── results/                              # Metric outputs & diagnostic plots
-├── other_models/                             # Benchmark Models & Experiments
-│   ├── lightgbm/                             # LightGBM data, model & training notebook
-│   ├── xgboost/                              # XGBoost data, model & training notebook
-│   └── ensemble/                             # Stacking & Voting ensemble research
-├── app.py                                    # Streamlit Real-Time Dashboard
+├── catboost/                                 # CatBoost model training & evaluation pipeline
+│   ├── data/
+│   ├── models/
+│   ├── notebooks/
+│   └── results/
+├── other_models/                             # Comparative models (LightGBM, XGBoost, Ensemble)
+│   ├── lightgbm/
+│   ├── xgboost/
+│   └── ensemble/
+├── app.py                                    # Streamlit real-time dashboard UI
 ├── predict.py                                # Inference pipeline module
-├── fetch_latest.py                           # Wyoming Sounding fetcher via Siphon
+├── fetch_latest.py                           # Live Wyoming sounding data fetcher
 ├── metpy_indices.py                          # Sounding index calculation engine
-├── requirements.txt                          # Python dependencies
-└── Thunderstorm_Report_Final.pdf             # Project Technical Report
+├── requirements.txt                          # Project dependencies
+└── Thunderstorm_Report_Final.pdf             # Internship technical report
 ```
 
 ---
