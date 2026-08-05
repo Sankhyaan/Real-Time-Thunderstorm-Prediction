@@ -6,10 +6,8 @@ import pandas as pd
 from metpy_indices import process_sounding
 
 # ==========================================================
-# Paths
-# ==========================================================
-
-MODEL_DIR = Path("final_outputs")
+BASE_DIR = Path(__file__).parent
+MODEL_DIR = BASE_DIR / "final_outputs"
 
 model = joblib.load(MODEL_DIR / "CatBoost_Final.pkl")
 feature_order = joblib.load(MODEL_DIR / "feature_order.pkl")

@@ -5,6 +5,7 @@ Real-Time Thunderstorm Prediction Dashboard
 """
 
 import pickle
+from pathlib import Path
 from datetime import datetime
 
 import pandas as pd
@@ -27,11 +28,8 @@ st.set_page_config(
 )
 
 
-# ==========================================================
-# LOAD MODEL ARTIFACTS
-# ==========================================================
-
-with open("final_outputs/feature_importance.pkl", "rb") as f:
+BASE_DIR = Path(__file__).parent
+with open(BASE_DIR / "final_outputs" / "feature_importance.pkl", "rb") as f:
     feature_importance = pickle.load(f)
 
 
@@ -346,14 +344,18 @@ should_run = (
 
 if should_run:
     with st.spinner("Downloading sounding..."):
-        if sel_date == today:
-            sounding = fetch_latest()
-        else:
-            observation = datetime(sel_date.year, sel_date.month, sel_date.day, sel_hour)
-            sounding = fetch_historical(observation)
+        try:
+            if sel_date == today:
+                sounding = fetch_latest()
+            else:
+                observation = datetime(sel_date.year, sel_date.month, sel_date.day, sel_hour)
+                sounding = fetch_historical(observation)
+        except Exception as e:
+            st.error(f"⚠️ Unable to download sounding data from University of Wyoming ({e}). Please select a different historical date or observation hour.")
+            st.stop()
 
-        if sounding is None:
-            st.error("No sounding is available for the selected date/time.")
+        if sounding is None or sounding.get("data") is None or sounding["data"].empty:
+            st.error("⚠️ No sounding data is available for the selected date/time. Please select a different date or observation hour.")
             st.stop()
 
     station      = sounding["station"]

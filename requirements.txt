@@ -11,3 +11,5 @@ requests
 python-dateutil
 plotly
 scikit-learn
+beautifulsoup4
+protobuf
