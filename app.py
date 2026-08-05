@@ -165,6 +165,14 @@ div[role="radiogroup"] p{color:#1F2937 !important;}
 [data-baseweb="radio"] *{color:#1F2937 !important;}
 .stRadio label,.stDateInput label,.stSelectbox label,.stMultiSelect label{color:#1F2937 !important;}
 
+/* Force hand/pointer cursor on hover for Date and Time inputs */
+.stDateInput, .stDateInput *, .stSelectbox, .stSelectbox *,
+[data-baseweb="input"], [data-baseweb="input"] *,
+[data-baseweb="select"], [data-baseweb="select"] *,
+[data-baseweb="popover"], [data-baseweb="popover"] * {
+    cursor: pointer !important;
+}
+
 /* Date input - lavender */
 [data-baseweb="input"]{
     background:#EDE9FE !important;
@@ -195,7 +203,6 @@ div[role="radiogroup"] p{color:#1F2937 !important;}
 }
 [data-baseweb="select"] input {
     caret-color: transparent !important;
-    cursor: pointer !important;
 }
 
 /* Selectbox dropdown list */
