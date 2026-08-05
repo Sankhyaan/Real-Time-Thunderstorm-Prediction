@@ -1,11 +1,14 @@
 # ⚡ Real-Time Thunderstorm Prediction System
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://real-time-thunderstorm-prediction.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B.svg)](https://streamlit.io/)
 [![CatBoost](https://img.shields.io/badge/Model-CatBoost%20Classifier-00C49F.svg)](https://catboost.ai/)
 [![MetPy](https://img.shields.io/badge/Meteorology-MetPy%20%7C%20Siphon-0088FE.svg)](https://unidata.github.io/MetPy/latest/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+> 🌐 **Live Web Dashboard**: [real-time-thunderstorm-prediction.streamlit.app](https://real-time-thunderstorm-prediction.streamlit.app/)
+>
 > **Operational Machine Learning System for 24-Hour Convective Hazard Forecasting Using Upper-Air Radiosonde Soundings, Derived Thermodynamic Indices, and Automated Wyoming Sounding Data Ingestion.**
 
 ---
@@ -161,7 +164,7 @@ Real-Time-Thunderstorm-Prediction/
 ├── predict.py                                # Inference pipeline module
 ├── fetch_latest.py                           # Live Wyoming sounding data fetcher
 ├── metpy_indices.py                          # Sounding index calculation engine
-├── requirements.txt                          # Project dependencies
+├── requirements.txt                          # Python dependencies
 └── Thunderstorm_Report_Final.pdf             # Internship technical report
 ```
 
@@ -203,6 +206,7 @@ Open [http://localhost:8501](http://localhost:8501) in your web browser.
 ## 👨‍💻 Author & Acknowledgements
 
 * **Project Developer**: Internship Project at **India Meteorological Department (IMD)**.
+* **Live App Deployment**: [real-time-thunderstorm-prediction.streamlit.app](https://real-time-thunderstorm-prediction.streamlit.app/)
 * **Data Sources**: 
   * Atmospheric Radiosonde Soundings: **University of Wyoming Department of Atmospheric Science**.
   * Surface SYNOP Present/Past Weather Observations: **India Meteorological Department (IMD)**.
