@@ -1,4 +1,4 @@
-﻿# ⚡ Real-Time Thunderstorm Prediction System
+# ⚡ Real-Time Thunderstorm Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B.svg)](https://streamlit.io/)
@@ -12,7 +12,7 @@
 
 ## 📌 Repository Overview
 
-The **Real-Time Thunderstorm Prediction System** is an operational machine learning framework designed to classify and predict 24-hour thunderstorm occurrence for **Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E)**. 
+The **Real-Time Thunderstorm Prediction System** is an operational machine learning framework designed to classify and predict 24-hour thunderstorm occurrence for **Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E)**.
 
 By combining **25 annual cycles of radiosonde upper-air profiles (2000–2025)** with ground-truth SYNOP present-weather reports, the system computes **28 atmospheric stability, moisture, and kinematic indices** via MetPy and predicts next-day severe weather risk using an Optuna-optimized **CatBoost Classifier**. The deployed Streamlit dashboard fetches live upper-air soundings via Siphon from the University of Wyoming database and maps raw probabilities into **7 calibrated operational risk tiers (35% to 95%)**.
 
@@ -20,7 +20,7 @@ By combining **25 annual cycles of radiosonde upper-air profiles (2000–2025)**
 
 ## 🚀 Key Features
 
-* **⚡ Real-Time Sounding Ingestion**: Automated live upper-air radiosonde retrieval for Station 43150 (00:00 & 12:00 UTC) via Siphon from the University of Wyoming database, with fallback to historical observations.
+* **⚡ Real-Time Sounding Ingestion**: Automated live upper-air radiosonde retrieval for Station 43150 (00:00 & 12:00 UTC) via `Siphon` from the University of Wyoming database, with fallback to historical observations.
 * **🔬 MetPy Diagnostic Engine**: Dynamic calculation of 28 atmospheric stability, thermodynamic, and kinematic indices (CAPE, PW, K-Index, Lifted Index, SWEAT, BRN, etc.).
 * **🤖 Optimized Gradient-Boosted Classifier**: Deployed CatBoost model with ordered boosting and oblivious trees, natively handling missing sounding levels without imputation bias.
 * **🎯 Recall-Constrained Threshold Calibration**: Decision threshold (0.32) optimized against the Critical Success Index (CSI) to prioritize early hazard warning over false alarm reduction.
@@ -35,8 +35,8 @@ By combining **25 annual cycles of radiosonde upper-air profiles (2000–2025)**
 | :--- | :--- |
 | **Observation Station** | Station 43150 (Visakhapatnam, India; 17.70° N, 83.30° E) |
 | **Time Period** | 25 Years (2000 – 2025), total 11,591 atmospheric soundings |
-| **Data Sources** | 1. University of Wyoming Upper-Air Radiosonde Archive<br>2. SYNOP Present/Past Weather Reports (7wwW1W2 codes) |
-| **Target Variable (Thunderstorm_24h)** | Binary indicator (1 = Thunderstorm observed within 24h, 0 = Non-thunderstorm). Triggered by present weather (ww in 13, 17, 29, 91-99) or past weather (W1/W2 = 9). |
+| **Data Sources** | 1. University of Wyoming Upper-Air Radiosonde Archive<br>2. SYNOP Present/Past Weather Reports (`7wwW1W2` codes) |
+| **Target Variable (`Thunderstorm_24h`)** | Binary indicator (1 = Thunderstorm observed within 24h, 0 = Non-thunderstorm). Triggered by present weather (ww in 13, 17, 29, 91-99) or past weather (W1/W2 = 9). |
 | **Class Distribution** | Imbalanced: 79.78% non-thunderstorm vs. 20.22% thunderstorm soundings |
 
 ### 📅 Chronological Dataset Splitting
@@ -54,7 +54,7 @@ To mirror operational forecasting reality and prevent temporal autocorrelation l
 
 ## 🌡️ Atmospheric Stability & Derived Features
 
-The model utilizes **28 upper-air predictors** calculated using the MetPy atmospheric science library:
+The model utilizes **28 upper-air predictors** calculated using the `MetPy` atmospheric science library:
 
 | Symbol | Parameter | Meteorological Significance |
 | :--- | :--- | :--- |
@@ -78,22 +78,19 @@ The model utilizes **28 upper-air predictors** calculated using the MetPy atmosp
 
 ## ⚙️ Machine Learning Pipeline & Methodology
 
-`
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Raw Radiosonde  │ ──►│ MetPy Diagnostic│ ──►│ Chronological   │
-│ & SYNOP Data    │    │ Index Generator │    │ Train/Val/Test  │
-└─────────────────┘    └─────────────────┘    └────────┬────────┘
-                                                       │
-┌─────────────────┐    ┌─────────────────┐             ▼
-│ Operational     │ ──►│ Threshold Search│ ◄─── ┌─────────────────┐
-│ Streamlit App   │    │ (Max CSI @ 0.70)│      │ Optuna Hyper-   │
-└─────────────────┘    └─────────────────┘      │ parameter Tuning│
-                                                └─────────────────┘
-`
+```mermaid
+flowchart TD
+    A[1. Raw Radiosonde Soundings & SYNOP Reports] --> B[2. MetPy Diagnostic Index Computation]
+    B --> C[3. Chronological Train/Val/Test Partitioning]
+    C --> D[4. CatBoost / LightGBM / XGBoost Model Training]
+    D --> E[5. Optuna Bayesian Hyperparameter Tuning]
+    E --> F[6. Recall-Constrained Threshold Optimization @ 0.32]
+    F --> G[7. Operational Risk Mapping & Streamlit Deployment]
+```
 
 1. **Missing Value Handling**: Incomplete soundings (e.g., terminating before EL) were preserved natively by CatBoost rather than imputed, as missingness carries physical atmospheric signal.
 2. **Multicollinearity**: All 28 features retained; tree ensembles natively manage correlated feature clusters (e.g., CAPE, KI, SWEAT).
-3. **Hyperparameter Tuning**: Optuna (Tree-structured Parzen Estimator) search optimizing validation F1/AUC with class weights set to Balanced.
+3. **Hyperparameter Tuning**: Optuna (Tree-structured Parzen Estimator) search optimizing validation F1/AUC with class weights set to `Balanced`.
 4. **Threshold Selection**: Swept decision thresholds (0.20 - 0.80) on validation data to maximize Critical Success Index (CSI) subject to a minimum recall constraint of 0.70, selecting **0.32** as the operating threshold.
 
 ---
@@ -158,32 +155,32 @@ Raw model probabilities are mapped into 7 operational risk tiers based on atmosp
 
 ## 📁 Project Directory Structure
 
-`
+```text
 Real-Time-Thunderstorm-Prediction/
 ├── .streamlit/
-│   └── config.toml
-├── final_outputs/
-│   ├── CatBoost_Final.pkl
-│   ├── feature_order.pkl
-│   ├── feature_importance.pkl
+│   └── config.toml                           # Streamlit theme configuration
+├── final_outputs/                            # Production Model & Mapping Artifacts
+│   ├── CatBoost_Final.pkl                    # Deployed CatBoost model binary
+│   ├── feature_order.pkl                     # Expected feature order
+│   ├── feature_importance.pkl                # Feature importance mapping
 │   ├── CatBoost_Operational_Probability_Mapping.csv
 │   └── CatBoost_Operational_Thunderstorm_Thresholds.csv
-├── catboost/
-│   ├── data/
-│   ├── models/
-│   ├── notebooks/
-│   └── results/
-├── other_models/
-│   ├── lightgbm/
-│   ├── xgboost/
-│   └── ensemble/
-├── app.py
-├── fetch_latest.py
-├── metpy_indices.py
-├── predict.py
-├── requirements.txt
-└── Thunderstorm_Report_Final.pdf
-`
+├── catboost/                                 # Primary CatBoost Pipeline & Research
+│   ├── data/                                 # Train, validation, and test CSV splits
+│   ├── models/                               # Research model backups
+│   ├── notebooks/                            # Sequential Jupyter notebooks (01 to 05)
+│   └── results/                              # Metric outputs & diagnostic plots
+├── other_models/                             # Benchmark Models & Experiments
+│   ├── lightgbm/                             # LightGBM data, model & training notebook
+│   ├── xgboost/                              # XGBoost data, model & training notebook
+│   └── ensemble/                             # Stacking & Voting ensemble research
+├── app.py                                    # Streamlit Real-Time Dashboard
+├── predict.py                                # Inference pipeline module
+├── fetch_latest.py                           # Wyoming Sounding fetcher via Siphon
+├── metpy_indices.py                          # Sounding index calculation engine
+├── requirements.txt                          # Python dependencies
+└── Thunderstorm_Report_Final.pdf             # Project Technical Report
+```
 
 ---
 
@@ -193,29 +190,29 @@ Real-Time-Thunderstorm-Prediction/
 Ensure you have Python 3.9+ installed on your system.
 
 ### 2. Clone Repository
-`ash
+```bash
 git clone https://github.com/Sankhyaan/Real-Time-Thunderstorm-Prediction.git
 cd Real-Time-Thunderstorm-Prediction
-`
+```
 
 ### 3. Create Virtual Environment
-`ash
+```bash
 python -m venv venv
 # On Windows:
 venv\Scripts\activate
 # On Linux/macOS:
 source venv/bin/activate
-`
+```
 
 ### 4. Install Dependencies
-`ash
+```bash
 pip install -r requirements.txt
-`
+```
 
 ### 5. Run Streamlit Dashboard
-`ash
+```bash
 streamlit run app.py
-`
+```
 Open [http://localhost:8501](http://localhost:8501) in your web browser.
 
 ---
@@ -226,4 +223,4 @@ Open [http://localhost:8501](http://localhost:8501) in your web browser.
 * **Data Sources**: 
   * Atmospheric Radiosonde Soundings: **University of Wyoming Department of Atmospheric Science**.
   * Surface SYNOP Present/Past Weather Observations: **India Meteorological Department (IMD)**.
-* **Libraries Used**: MetPy, Siphon, CatBoost, LightGBM, XGBoost, Optuna, Streamlit, Plotly, Pandas, Scikit-Learn.
+* **Libraries Used**: `MetPy`, `Siphon`, `CatBoost`, `LightGBM`, `XGBoost`, `Optuna`, `Streamlit`, `Plotly`, `Pandas`, `Scikit-Learn`.
