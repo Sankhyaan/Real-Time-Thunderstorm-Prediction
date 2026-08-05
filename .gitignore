@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+
+# Environment / IDE
+.vscode/
+.idea/
+*.swp
+
+# OS generated
+Thumbs.db
+Desktop.ini

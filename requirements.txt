@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+scipy
+catboost
+joblib
+metpy
+siphon
+pint
+requests
+python-dateutil
+plotly
+scikit-learn

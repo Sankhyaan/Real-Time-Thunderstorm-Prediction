@@ -1,0 +1,2 @@
+iterations,depth,learning_rate,l2_leaf_reg,random_strength,bagging_temperature,border_count,grow_policy,min_data_in_leaf,leaf_estimation_iterations,model_size_reg,rsm,loss_function,eval_metric,bootstrap_type,class_weights,random_seed,verbose
+1641,8,0.08431182862246772,13.557077736832051,7.798997152594511,5.5428053096408245,164,SymmetricTree,6,7,3.228751710971388,0.7965405648018309,Logloss,AUC,Bayesian,"[1, 5.390476661709168]",42,100
