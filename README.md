@@ -1,6 +1,6 @@
 # ⚡ Real-Time Thunderstorm Prediction System
 
-[![Live AWS Dashboard](https://img.shields.io/badge/Live%20Dashboard-AWS%20EC2%20(Port%208501)-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](http://65.2.37.39:8501/)
+[![Live AWS Dashboard](https://img.shields.io/badge/Live%20Dashboard-AWS%20EC2%20(Port%208501)-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](http://13.203.136.117:8501/)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://real-time-thunderstorm-prediction.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
@@ -8,7 +8,7 @@
 [![MetPy](https://img.shields.io/badge/Meteorology-MetPy%20%7C%20Siphon-0088FE.svg?style=for-the-badge)](https://unidata.github.io/MetPy/latest/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-> 🌐 **Live Web Dashboard (AWS EC2)**: [http://65.2.37.39:8501](http://65.2.37.39:8501/)  
+> 🌐 **Live Web Dashboard (AWS EC2)**: [http://13.203.136.117:8501](http://13.203.136.117:8501/)  
 > ⚡ **Streamlit Cloud Mirror**: [real-time-thunderstorm-prediction.streamlit.app](https://real-time-thunderstorm-prediction.streamlit.app/)
 >
 > **Operational Machine Learning System for 24-Hour Convective Hazard Forecasting Using Upper-Air Radiosonde Soundings, Derived Thermodynamic Indices, and Automated Wyoming Sounding Data Ingestion.**
